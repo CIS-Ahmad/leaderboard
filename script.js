@@ -126,7 +126,6 @@ function createElement(name, className, id = null, textContent = "", father = nu
     return element;
 }
 
-
 function CreateDisplayElement(index) {
 
     const currentUser = usersData[index];
@@ -150,10 +149,12 @@ function CreateDisplayElement(index) {
 
     btn1.addEventListener("click", () => {
         removeUserFromLocalStorage(currentUser.ID);
+
     });
 
     btn2.addEventListener("click", () => {
         updateUserScore(currentUser.ID, 5);
+
     });
 
     btn3.addEventListener("click", () => {
@@ -161,15 +162,34 @@ function CreateDisplayElement(index) {
     });
 }
 
+function noDataToShow(showMessage) {
+
+    const nD = getEleUsingID("NoData");
+
+    if (showMessage) {
+        nD.style.display = "flex";
+    }
+    else {
+        nD.style.display = "none";
+    }
+
+}
+
 function DisplayScreen() {
 
     GetUsersDataFromLocalStorage();
-
     const reslut = getEleUsingID("reslut");
     reslut.innerHTML = "";
+    if (usersData.length > 0) {
+        noDataToShow(false);
 
-    for (let i = 0; i < usersData.length; i++) {
-        CreateDisplayElement(i);
+
+        for (let i = 0; i < usersData.length; i++) {
+            CreateDisplayElement(i);
+        }
+    }
+    else {
+        noDataToShow(true);
     }
 }
 
@@ -196,6 +216,8 @@ document.addEventListener("DOMContentLoaded", () => {
         } else {
             getEleUsingID("ErrorMessage").style.display = 'flex';
         }
+        DisplayScreen();
+
     });
 
     const scorFild = getEleUsingID("Player-score");
@@ -207,7 +229,6 @@ document.addEventListener("DOMContentLoaded", () => {
         else if (Number(scorFild.value) < 0) {
             scorFild.value = 0;
         }
-
     });
     const elements = [
         getEleUsingID("F-Name"),
@@ -220,6 +241,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         });
     });
-
     DisplayScreen();
+
 });

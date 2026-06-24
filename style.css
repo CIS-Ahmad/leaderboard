@@ -26,6 +26,18 @@ main {
   justify-content: center;
 }
 
+.NoData {
+  display: flex;
+  flex-direction: column;
+  justify-items: center;
+  align-self: center;
+  text-align: center;
+}
+#EmptyPlaceholder {
+  height: 300px;
+  width: 300px;
+}
+
 .InfoGath {
   height: 45px;
   margin: 20px 0%;
@@ -38,6 +50,9 @@ main {
 #AddPlayer {
   background-color: #844273;
   color: white;
+}
+#AddPlayer:active {
+  background-color: #2b0221;
 }
 
 .reslut {
@@ -115,5 +130,6 @@ main {
   margin: 0%;
 }
 
-#Player-score {
+.but:active {
+  background-color: #3f3535;
 }
