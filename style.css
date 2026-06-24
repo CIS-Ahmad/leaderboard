@@ -1,0 +1,119 @@
+h1 {
+  text-align: center;
+  color: #5c5b5bef;
+  font-size: 40px;
+  word-spacing: 10px;
+  letter-spacing: 2px;
+}
+h2 {
+  color: red;
+  text-align: center;
+  font-size: 40px;
+  display: none;
+}
+main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.PlayerInfo {
+  width: 90%;
+  display: grid;
+  grid-template-columns: repeat(5, 18%);
+  gap: 20px;
+  justify-content: center;
+}
+
+.InfoGath {
+  height: 45px;
+  margin: 20px 0%;
+  text-align: center;
+  font-size: 20px;
+  font-weight: bold;
+  border: #844273 solid 1px;
+  color: #844273;
+}
+#AddPlayer {
+  background-color: #844273;
+  color: white;
+}
+
+.reslut {
+  display: flex;
+  flex-direction: column;
+
+  justify-content: center;
+  align-content: center;
+  background-color: white;
+  gap: 20px;
+  font-size: 25px;
+  width: 90%;
+}
+
+.rowReslut {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  height: 80px;
+  column-gap: 20px;
+  background-color: #844273;
+}
+.Gridelement {
+  display: flex;
+  margin: 10px 10px;
+  color: black;
+  justify-content: center;
+  align-items: center;
+}
+
+.fGridelement {
+  display: flex;
+  flex-direction: column;
+
+  margin: -15px 10px;
+  color: black;
+}
+
+.Date {
+  color: #292828;
+  font-size: 15px;
+  padding: 0%;
+  margin: 0%;
+}
+
+.Name {
+  padding: 0%;
+  padding-top: 10px;
+  margin-bottom: 5px;
+  margin-top: 20px;
+  letter-spacing: 5px;
+}
+.lGridelement {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+
+  gap: 20px;
+}
+
+.but {
+  width: 45px;
+  height: 45px;
+  border-radius: 40px;
+  background-color: white;
+  margin: 5px;
+  border: none;
+  font-size: 25px;
+}
+
+.but img {
+  width: 23px;
+  height: 23px;
+  padding: 0%;
+  margin: 0%;
+}
+
+#Player-score {
+}
