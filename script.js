@@ -20,8 +20,6 @@ function writeOnUsreLocalStorage() {
     localStorage.setItem("usersData", JSON.stringify(usersData));
 }
 
-
-
 function addNewUserForLocalStorage() {
 
     GetUsersDataFromLocalStorage();
@@ -175,6 +173,13 @@ function DisplayScreen() {
     }
 }
 
+function cleanChoices() {
+    getEleUsingID("F-Name").value = null;
+    getEleUsingID("L-Name").value = null;
+    getEleUsingID("Country").value = null;
+    getEleUsingID("Player-score").value = null;
+}
+
 document.addEventListener("DOMContentLoaded", () => {
 
     getEleUsingID('AddPlayer').addEventListener("click", () => {
@@ -185,15 +190,15 @@ document.addEventListener("DOMContentLoaded", () => {
             getEleUsingID("Country").value) {
 
             getEleUsingID("ErrorMessage").style.display = 'none';
-
             addNewUSer();
+            cleanChoices();
 
         } else {
             getEleUsingID("ErrorMessage").style.display = 'flex';
         }
     });
 
-    let scorFild = getEleUsingID("Player-score");
+    const scorFild = getEleUsingID("Player-score");
     scorFild.addEventListener('input', () => {
 
         if (Number(scorFild.value) > 100) {
@@ -203,6 +208,17 @@ document.addEventListener("DOMContentLoaded", () => {
             scorFild.value = 0;
         }
 
+    });
+    const elements = [
+        getEleUsingID("F-Name"),
+        getEleUsingID("L-Name")
+    ];
+
+    elements.forEach(el => {
+        el.addEventListener("input", (e) => {
+            e.target.value = e.target.value.replace(/[^a-zA-Z\s-]/g, "");
+
+        });
     });
 
     DisplayScreen();
