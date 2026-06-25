@@ -143,23 +143,17 @@ function CreateDisplayElement(index) {
 
     let btn1 = createElement("button", "but", '', "", `actions-${index}`);
     btn1.innerHTML = `<img src="./assets/SVG/delete.svg">`;
+    btn1.dataset.id = currentUser.ID;
+    btn1.dataset.action = "delete";
 
     let btn2 = createElement("button", "but", '', '+5', `actions-${index}`);
+    btn2.dataset.id = currentUser.ID;
+    btn2.dataset.action = "Add";
+
     let btn3 = createElement("button", "but", '', '-5', `actions-${index}`);
+    btn3.dataset.id = currentUser.ID;
+    btn3.dataset.action = "Minus";
 
-    btn1.addEventListener("click", () => {
-        removeUserFromLocalStorage(currentUser.ID);
-
-    });
-
-    btn2.addEventListener("click", () => {
-        updateUserScore(currentUser.ID, 5);
-
-    });
-
-    btn3.addEventListener("click", () => {
-        updateUserScore(currentUser.ID, -5);
-    });
 }
 
 function noDataToShow(showMessage) {
@@ -241,6 +235,30 @@ document.addEventListener("DOMContentLoaded", () => {
 
         });
     });
+
+
+    const recordsContener = getEleUsingID("reslut");
+
+    recordsContener.addEventListener("click", (e) => {
+        const btn = e.target.closest("[data-action]");
+
+        if (!btn) return;
+
+        let id = Number(btn.dataset.id);
+        let action = btn.dataset.action;
+        if (action === "Add") {
+            updateUserScore(id, 5);
+        }
+        else if (action === "Minus") {
+            updateUserScore(id, -5);
+        }
+        else if (action === "delete") {
+            removeUserFromLocalStorage(id);
+        }
+
+    });
     DisplayScreen();
 
+
 });
+DisplayScreen();
