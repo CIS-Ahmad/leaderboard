@@ -226,7 +226,9 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     const elements = [
         getEleUsingID("F-Name"),
-        getEleUsingID("L-Name")
+        getEleUsingID("L-Name"),
+        getEleUsingID("Country")
+
     ];
 
     elements.forEach(el => {
