@@ -1,266 +1,279 @@
 let usersData = [];
 
 let userData = {
-    ID: 0,
-    name: "",
-    date: "",
-    country: "",
-    score: 0
+  ID: 0,
+  name: "",
+  date: "",
+  country: "",
+  score: 0,
 };
 
-function getEleUsingID(ID) {
-    return document.getElementById(ID);
+const SCORE = 5;
+
+function getElementUsingID(ID) {
+  return document.getElementById(ID);
 }
 
-function GetUsersDataFromLocalStorage() {
-    usersData = JSON.parse(localStorage.getItem("usersData")) || [];
+function getUsersDataFromLocalStorage() {
+  usersData = JSON.parse(localStorage.getItem("usersData")) || [];
 }
 
-function writeOnUsreLocalStorage() {
-    localStorage.setItem("usersData", JSON.stringify(usersData));
+function writeOnUserLocalStorage() {
+  localStorage.setItem("usersData", JSON.stringify(usersData));
 }
 
 function addNewUserForLocalStorage() {
+  getUsersDataFromLocalStorage();
 
-    GetUsersDataFromLocalStorage();
+  usersData.push(userData);
 
-    usersData.push(userData);
+  usersData.sort((a, b) => b.score - a.score);
 
-    usersData.sort((a, b) => b.score - a.score);
-
-    writeOnUsreLocalStorage();
-    DisplayScreen();
+  writeOnUserLocalStorage();
+  DisplayScreen();
 }
 
-function addNewUSer() {
+function addNewUser() {
+  userData = {
+    ID: Date.now(),
+    name: `${getElementUsingID("F-Name").value} ${getElementUsingID("L-Name").value}`,
+    date: getFullCurrentDate(),
+    country: getElementUsingID("Country").value,
+    score: Number(getElementUsingID("Player-score").value),
+  };
 
-    userData = {
-        ID: Date.now(),
-        name: `${getEleUsingID("F-Name").value} ${getEleUsingID("L-Name").value}`,
-        date: getFullCurrentDate(),
-        country: getEleUsingID("Country").value,
-        score: Number(getEleUsingID("Player-score").value)
-    };
-
-    addNewUserForLocalStorage();
+  addNewUserForLocalStorage();
 }
 
+function getUsersDataById(ID) {
+  let users = JSON.parse(localStorage.getItem("usersData")) || [];
 
-
-function GetUSersDataById(ID) {
-
-    let users = JSON.parse(localStorage.getItem("usersData")) || [];
-
-    return users.find(c => c.ID === ID) || null;
+  return users.find((c) => c.ID === ID) || null;
 }
 
 function removeUserFromLocalStorage(ID) {
+  getUsersDataFromLocalStorage();
 
-    GetUsersDataFromLocalStorage();
+  let before = usersData.length;
 
-    let before = usersData.length;
+  usersData = usersData.filter((user) => user.ID !== ID);
 
-    usersData = usersData.filter(user => user.ID !== ID);
+  if (before === usersData.length) {
+    console.error("User was not deleted");
+    return;
+  }
 
-    if (before === usersData.length) {
-        console.error("User was not deleted");
-        return;
-    }
-
-    writeOnUsreLocalStorage();
-    DisplayScreen();
+  writeOnUserLocalStorage();
+  DisplayScreen();
 }
 
 function updateUserScore(ID, value) {
+  getUsersDataFromLocalStorage();
 
-    GetUsersDataFromLocalStorage();
+  let user = usersData.find((u) => u.ID === ID);
+  if (!user) return;
 
-    let user = usersData.find(u => u.ID === ID);
-    if (!user) return;
+  if (value === SCORE) {
+    user.score = Math.min(100, user.score + SCORE);
+  } else {
+    user.score = Math.max(0, user.score - SCORE);
+  }
 
-    if (value === 5) {
-        user.score = Math.min(100, user.score + 5);
-    } else {
-        user.score = Math.max(0, user.score - 5);
-    }
+  usersData.sort((a, b) => b.score - a.score);
 
-    usersData.sort((a, b) => b.score - a.score);
-
-    writeOnUsreLocalStorage();
-    DisplayScreen();
+  writeOnUserLocalStorage();
+  DisplayScreen();
 }
-
 
 function getFullCurrentDate() {
-    return new Date().toLocaleString('en-US', {
-        month: 'long',
-        day: 'numeric',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false
-    });
+  return new Date().toLocaleString("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  });
 }
 
+function createElement(
+  name,
+  className,
+  id = null,
+  textContent = "",
+  father = null,
+) {
+  const element = document.createElement(name);
+  if (className) element.classList.add(className);
 
-function createElement(name, className, id = null, textContent = "", father = null) {
+  if (textContent !== "") {
+    element.textContent = textContent;
+  }
 
-    const element = document.createElement(name);
-    element.classList.add(className);
+  if (id) {
+    element.id = id;
+  }
 
-    if (textContent !== "") {
-        element.textContent = textContent;
-    }
+  if (father) {
+    const parent = getElementUsingID(father);
+    parent.appendChild(element);
+  } else {
+    document.body.appendChild(element);
+  }
 
-    if (id) {
-        element.id = id;
-    }
-
-    if (father) {
-        const parent = getEleUsingID(father);
-        parent.appendChild(element);
-    } else {
-        document.body.appendChild(element);
-    }
-
-    return element;
+  return element;
 }
 
-function CreateDisplayElement(index) {
+function createDisplayElement(index) {
+  const currentUser = usersData[index];
 
-    const currentUser = usersData[index];
+  createElement("div", "rowReslut", `rowReslut-${index}`, "", "reslut");
 
-    createElement("div", "rowReslut", `rowReslut-${index}`, "", "reslut");
+  createElement(
+    "div",
+    "fGridelement",
+    `fGridelement-${index}`,
+    "",
+    `rowReslut-${index}`,
+  );
+  createElement("p", "Name", "", currentUser.name, `fGridelement-${index}`);
+  createElement("p", "Date", "", currentUser.date, `fGridelement-${index}`);
 
-    createElement("div", "fGridelement", `fGridelement-${index}`, "", `rowReslut-${index}`);
-    createElement("p", "Name", '', currentUser.name, `fGridelement-${index}`);
-    createElement("p", "Date", '', currentUser.date, `fGridelement-${index}`);
+  createElement(
+    "div",
+    "Gridelement",
+    "",
+    currentUser.country,
+    `rowReslut-${index}`,
+  );
+  createElement(
+    "div",
+    "Gridelement",
+    "",
+    currentUser.score,
+    `rowReslut-${index}`,
+  );
 
-    createElement("div", "Gridelement", '', currentUser.country, `rowReslut-${index}`);
-    createElement("div", "Gridelement", '', currentUser.score, `rowReslut-${index}`);
+  createElement(
+    "div",
+    "Gridelement",
+    `actions-${index}`,
+    "",
+    `rowReslut-${index}`,
+  );
 
-    createElement("div", "Gridelement", `actions-${index}`, "", `rowReslut-${index}`);
+  let btn1 = createElement("button", "but", "", "", `actions-${index}`);
+  btn1.innerHTML = `<img src="./assets/SVG/delete.svg">`;
+  btn1.dataset.id = currentUser.ID;
+  btn1.dataset.action = "delete";
 
-    let btn1 = createElement("button", "but", '', "", `actions-${index}`);
-    btn1.innerHTML = `<img src="./assets/SVG/delete.svg">`;
-    btn1.dataset.id = currentUser.ID;
-    btn1.dataset.action = "delete";
+  let btn2 = createElement(
+    "button",
+    "but",
+    "",
+    `+${SCORE}`,
+    `actions-${index}`,
+  );
+  btn2.dataset.id = currentUser.ID;
+  btn2.dataset.action = "Add";
 
-    let btn2 = createElement("button", "but", '', '+5', `actions-${index}`);
-    btn2.dataset.id = currentUser.ID;
-    btn2.dataset.action = "Add";
-
-    let btn3 = createElement("button", "but", '', '-5', `actions-${index}`);
-    btn3.dataset.id = currentUser.ID;
-    btn3.dataset.action = "Minus";
-
+  let btn3 = createElement(
+    "button",
+    "but",
+    "",
+    `-${SCORE}`,
+    `actions-${index}`,
+  );
+  btn3.dataset.id = currentUser.ID;
+  btn3.dataset.action = "Minus";
 }
 
 function noDataToShow(showMessage) {
+  const nD = getElementUsingID("NoData");
 
-    const nD = getEleUsingID("NoData");
-
-    if (showMessage) {
-        nD.style.display = "flex";
-    }
-    else {
-        nD.style.display = "none";
-    }
-
+  if (showMessage) {
+    nD.style.display = "flex";
+  } else {
+    nD.style.display = "none";
+  }
 }
 
 function DisplayScreen() {
+  getUsersDataFromLocalStorage();
+  const reslut = getElementUsingID("reslut");
+  reslut.innerHTML = "";
+  if (usersData.length > 0) {
+    noDataToShow(false);
 
-    GetUsersDataFromLocalStorage();
-    const reslut = getEleUsingID("reslut");
-    reslut.innerHTML = "";
-    if (usersData.length > 0) {
-        noDataToShow(false);
-
-
-        for (let i = 0; i < usersData.length; i++) {
-            CreateDisplayElement(i);
-        }
+    for (let i = 0; i < usersData.length; i++) {
+      createDisplayElement(i);
     }
-    else {
-        noDataToShow(true);
-    }
+  } else {
+    noDataToShow(true);
+  }
 }
 
 function cleanChoices() {
-    getEleUsingID("F-Name").value = null;
-    getEleUsingID("L-Name").value = null;
-    getEleUsingID("Country").value = null;
-    getEleUsingID("Player-score").value = null;
+  getElementUsingID("F-Name").value = null;
+  getElementUsingID("L-Name").value = null;
+  getElementUsingID("Country").value = null;
+  getElementUsingID("Player-score").value = null;
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-
-    getEleUsingID('AddPlayer').addEventListener("click", () => {
-
-        if (getEleUsingID("F-Name").value &&
-            getEleUsingID("L-Name").value &&
-            getEleUsingID("Player-score").value &&
-            getEleUsingID("Country").value) {
-
-            getEleUsingID("ErrorMessage").style.display = 'none';
-            addNewUSer();
-            cleanChoices();
-
-        } else {
-            getEleUsingID("ErrorMessage").style.display = 'flex';
-        }
-        DisplayScreen();
-
-    });
-
-    const scorFild = getEleUsingID("Player-score");
-    scorFild.addEventListener('input', () => {
-
-        if (Number(scorFild.value) > 100) {
-            scorFild.value = 100;
-        }
-        else if (Number(scorFild.value) < 0) {
-            scorFild.value = 0;
-        }
-    });
-    const elements = [
-        getEleUsingID("F-Name"),
-        getEleUsingID("L-Name"),
-        getEleUsingID("Country")
-
-    ];
-
-    elements.forEach(el => {
-        el.addEventListener("input", (e) => {
-            e.target.value = e.target.value.replace(/[^a-zA-Z\s-]/g, "");
-
-        });
-    });
-
-
-    const recordsContener = getEleUsingID("reslut");
-
-    recordsContener.addEventListener("click", (e) => {
-        const btn = e.target.closest("[data-action]");
-
-        if (!btn) return;
-
-        let id = Number(btn.dataset.id);
-        let action = btn.dataset.action;
-        if (action === "Add") {
-            updateUserScore(id, 5);
-        }
-        else if (action === "Minus") {
-            updateUserScore(id, -5);
-        }
-        else if (action === "delete") {
-            removeUserFromLocalStorage(id);
-        }
-
-    });
+  getElementUsingID("AddPlayer").addEventListener("click", () => {
+    if (
+      getElementUsingID("F-Name").value &&
+      getElementUsingID("L-Name").value &&
+      getElementUsingID("Player-score").value &&
+      getElementUsingID("Country").value
+    ) {
+      getElementUsingID("ErrorMessage").style.display = "none";
+      addNewUser();
+      cleanChoices();
+    } else {
+      getElementUsingID("ErrorMessage").style.display = "flex";
+    }
     DisplayScreen();
+  });
 
+  const scorFild = getElementUsingID("Player-score");
+  scorFild.addEventListener("input", () => {
+    if (Number(scorFild.value) > 100) {
+      scorFild.value = 100;
+    } else if (Number(scorFild.value) < 0) {
+      scorFild.value = 0;
+    }
+  });
+  const elements = [
+    getElementUsingID("F-Name"),
+    getElementUsingID("L-Name"),
+    getElementUsingID("Country"),
+  ];
 
+  elements.forEach((el) => {
+    el.addEventListener("input", (e) => {
+      e.target.value = e.target.value.replace(/[^a-zA-Z\s-]/g, "");
+    });
+  });
+
+  const recordsContener = getElementUsingID("reslut");
+
+  recordsContener.addEventListener("click", (e) => {
+    const btn = e.target.closest("[data-action]");
+
+    if (!btn) return;
+
+    let id = Number(btn.dataset.id);
+    let action = btn.dataset.action;
+    if (action === "Add") {
+      updateUserScore(id, SCORE);
+    } else if (action === "Minus") {
+      updateUserScore(id, -SCORE);
+    } else if (action === "delete") {
+      removeUserFromLocalStorage(id);
+    }
+  });
 });
+
 DisplayScreen();
